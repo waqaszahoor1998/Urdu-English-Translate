@@ -1,33 +1,56 @@
 # Urdu Voice to English Translation
 
-A web application that converts Urdu voice input to text and translates it to English.
+A web application that converts Urdu voice input to text and translates it to English, with optional medical prescription formatting.
 
-## Features
+## ✨ Features
 
 - 🎤 Real-time voice recording in Urdu
-- 📝 Automatic speech-to-text conversion for Urdu
+- 📝 Automatic speech-to-text conversion (Whisper or Google Speech API)
 - 🌐 Translation from Urdu to English
+- 🏥 Optional medical prescription formatting
+- 🔍 Language detection (English/Urdu)
 - 💻 Beautiful, modern web interface
 - 📱 Responsive design for mobile and desktop
 
-## Requirements
+## 🚀 Quick Start (Easiest Way)
 
-- Python 3.7 or higher
-- Microphone access in your browser
-- Internet connection (for Google Speech API and translation services)
+### For Windows:
+**Just double-click `start_windows.bat`** - it handles everything automatically!
 
-## Installation
+### For macOS/Linux:
+```bash
+chmod +x start_macos.sh
+./start_macos.sh
+```
 
-1. **Install Python dependencies:**
+That's it! The script will:
+- ✅ Check Python installation
+- ✅ Create virtual environment
+- ✅ Install all dependencies
+- ✅ Start the application
+- ✅ Open in your browser
+
+**First run takes 2-5 minutes** (one-time setup). After that, it starts immediately!
+
+## 📋 Manual Installation (Alternative)
+
+If you prefer manual setup:
+
+1. **Requirements:**
+   - Python 3.7 or higher
+   - Microphone access in your browser
+   - Internet connection (for translation services)
+
+2. **Install Python dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **Install system dependencies:**
+3. **Install system dependencies (optional, for better audio processing):**
 
    **For macOS:**
    ```bash
-   brew install portaudio
+   brew install portaudio ffmpeg
    ```
 
    **For Ubuntu/Debian:**
@@ -39,38 +62,50 @@ A web application that converts Urdu voice input to text and translates it to En
    - Download and install [Visual C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
    - Install [ffmpeg](https://ffmpeg.org/download.html) and add it to PATH
 
-## Usage
-
-1. **Start the Flask server:**
+4. **Start the application:**
    ```bash
    python app.py
    ```
 
-2. **Open your browser and navigate to:**
+5. **Open your browser:**
    ```
-   http://localhost:5000
+   http://localhost:5001
    ```
 
-3. **Click the "Click to Record" button** and allow microphone access when prompted
+## 🎯 Usage
 
-4. **Speak in Urdu** - The application will:
+1. Click the **"Click to Record"** button and allow microphone access
+2. **Speak in Urdu or English** - The application will:
    - Record your voice
-   - Convert it to Urdu text
-   - Translate it to English
-   - Display both the Urdu text and English translation
+   - Convert it to text
+   - Translate to English (if Urdu detected)
+   - Display both original and translated text
+3. Click **"Format as Prescription"** (optional) to format medical text
 
-## How It Works
+## 🔧 How It Works
 
-1. **Voice Input**: Uses the browser's MediaRecorder API to capture audio
-2. **Speech Recognition**: Converts audio to text using Google Speech Recognition API (supports Urdu - ur-PK)
-3. **Translation**: Translates the Urdu text to English using Google Translate API
+1. **Voice Input**: Browser's MediaRecorder API captures audio
+2. **Speech Recognition**: 
+   - Whisper (local, recommended) - Works offline, best accuracy
+   - Google Speech API (fallback) - Requires internet
+3. **Language Detection**: Automatically detects English or Urdu
+4. **Translation**: Google Translate API (Urdu → English)
+5. **Medical Formatting**: Optional prescription formatting for medical text
 
-## Notes
+## 📝 Notes
 
-- Make sure to speak clearly and in a quiet environment for best results
-- The first use may take longer as it adjusts for ambient noise
-- Internet connection is required for speech recognition and translation services
-- Best results are achieved with Chrome, Firefox, or Edge browsers
+- **No API keys required** - Works out of the box!
+- **Offline speech recognition** - If Whisper is installed (downloads automatically)
+- **Internet required** - For translation service (always needed)
+- **First run** - Whisper models download automatically (~500MB, one-time)
+- **Best results** - Chrome, Firefox, or Edge browsers
+- **Clear audio** - Speak clearly in a quiet environment
+
+## 🏥 Medical Features
+
+- Automatic extraction of medications, tests, and patient descriptions
+- Optional prescription formatting with "Format as Prescription" button
+- Works with both Urdu and English medical terminology
 
 ## Troubleshooting
 
