@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urdu Voice to English Translation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .record-btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.2em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .record-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .record-btn:active {
+            transform: translateY(0);
+        }
+
+        .record-btn.recording {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.1em;
+            color: #666;
+            min-height: 30px;
+        }
+
+        .result-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .result-section {
+            margin-bottom: 20px;
+        }
+
+        .result-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-text {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            font-size: 1.1em;
+            line-height: 1.6;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .result-text.english {
+            direction: ltr;
+            text-align: left;
+            border-left-color: #764ba2;
+        }
+
+        .error {
+            color: #f5576c;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #ffe6e6;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .timer {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #f5576c;
+            margin: 10px 0;
+        }
+
+        .audio-player {
+            margin-top: 15px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗣️ Urdu Voice to English</h1>
+        <p class="subtitle">Speak in Urdu and get instant English translation</p>
+        
+        <button id="recordBtn" class="record-btn">🎤 Click to Record</button>
+        
+        <div class="timer" id="timer" style="display: none;"></div>
+        
+        <div class="status" id="status"></div>
+        
+        <div class="error" id="error"></div>
+        
+        <div class="result-container" id="resultContainer">
+            <div class="result-section">
+                <div class="result-label">Urdu Text (اردو):</div>
+                <div class="result-text" id="urduText"></div>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="copyToClipboard('urduText', this)">📋 Copy Urdu</button>
+                    <button class="action-btn" onclick="downloadText('urduText', 'urdu')">💾 Download</button>
+                </div>
+            </div>
+            <div class="result-section">
+                <div class="result-label">English Translation:</div>
+                <div class="result-text english" id="englishText"></div>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="copyToClipboard('englishText', this)">📋 Copy English</button>
+                    <button class="action-btn" onclick="downloadText('englishText', 'english')">💾 Download</button>
+                </div>
+            </div>
+            <audio id="audioPlayer" class="audio-player" controls style="display: none;"></audio>
+        </div>
+    </div>
+
+    <script>
+        const recordBtn = document.getElementById('recordBtn');
+        const status = document.getElementById('status');
+        const error = document.getElementById('error');
+        const resultContainer = document.getElementById('resultContainer');
+        const urduText = document.getElementById('urduText');
+        const englishText = document.getElementById('englishText');
+
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        let recordingStartTime = null;
+        let timerInterval = null;
+        let recordedAudioBlob = null;
+
+        // Check for browser support
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            showError('Your browser does not support audio recording. Please use a modern browser like Chrome, Firefox, or Edge.');
+        }
+
+        recordBtn.addEventListener('click', async () => {
+            if (!isRecording) {
+                try {
+                    // Request microphone access
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    
+                    mediaRecorder = new MediaRecorder(stream, {
+                        mimeType: 'audio/webm;codecs=opus'
+                    });
+
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            audioChunks.push(event.data);
+                        }
+                    };
+
+                    mediaRecorder.onstop = async () => {
+                        recordedAudioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        
+                        // Stop timer
+                        stopTimer();
+                        
+                        // Play back the recorded audio
+                        const audioPlayer = document.getElementById('audioPlayer');
+                        const audioUrl = URL.createObjectURL(recordedAudioBlob);
+                        audioPlayer.src = audioUrl;
+                        audioPlayer.style.display = 'block';
+                        
+                        // Convert blob to base64
+                        const reader = new FileReader();
+                        reader.onloadend = async () => {
+                            const base64audio = reader.result;
+                            
+                            status.innerHTML = '<div class="loading"></div> Processing audio...';
+                            
+                            try {
+                                const response = await fetch('/process-audio', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ audio: base64audio })
+                                });
+
+                                const data = await response.json();
+
+                                if (data.success) {
+                                    hideError();
+                                    urduText.textContent = data.urdu_text;
+                                    englishText.textContent = data.english_text;
+                                    resultContainer.classList.add('show');
+                                    status.textContent = `Translation completed! (Duration: ${data.duration || 'N/A'}s)`;
+                                } else {
+                                    showError(data.error || 'Failed to process audio');
+                                    status.textContent = '';
+                                }
+                            } catch (err) {
+                                showError('Error communicating with server: ' + err.message);
+                                status.textContent = '';
+                            }
+                        };
+                        reader.readAsDataURL(recordedAudioBlob);
+                    };
+
+                    // Start recording
+                    mediaRecorder.start();
+                    isRecording = true;
+                    recordingStartTime = Date.now();
+                    startTimer();
+                    recordBtn.textContent = '⏹️ Stop Recording';
+                    recordBtn.classList.add('recording');
+                    status.textContent = 'Recording... Speak in Urdu now!';
+                    hideError();
+                    resultContainer.classList.remove('show');
+                    document.getElementById('audioPlayer').style.display = 'none';
+
+                } catch (err) {
+                    showError('Error accessing microphone: ' + err.message);
+                    status.textContent = '';
+                }
+            } else {
+                // Stop recording
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                    mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                }
+                isRecording = false;
+                recordBtn.textContent = '🎤 Click to Record';
+                recordBtn.classList.remove('recording');
+                status.textContent = 'Processing your voice...';
+            }
+        });
+
+        function showError(message) {
+            error.textContent = message;
+            error.classList.add('show');
+        }
+
+        function hideError() {
+            error.classList.remove('show');
+        }
+
+        function startTimer() {
+            const timerEl = document.getElementById('timer');
+            timerEl.style.display = 'block';
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 100);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            const timerEl = document.getElementById('timer');
+            timerEl.style.display = 'none';
+            recordingStartTime = null;
+        }
+
+        function copyToClipboard(elementId, button) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                if (button) {
+                    const originalText = button.textContent;
+                    button.textContent = '✅ Copied!';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                    }, 2000);
+                }
+            }).catch(err => {
+                showError('Failed to copy to clipboard');
+            });
+        }
+
+        function downloadText(elementId, language) {
+            const text = document.getElementById(elementId).textContent;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `translation_${language}_${new Date().getTime()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
+

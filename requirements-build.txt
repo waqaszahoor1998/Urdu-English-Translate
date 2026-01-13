@@ -1,0 +1,5 @@
+# Requirements for building executables
+# Install with: pip install -r requirements-build.txt
+
+PyInstaller>=5.13.0
+
