@@ -1,0 +1,7 @@
+# Additional requirements for medical features
+langdetect>=1.0.9
+
+# Optional: For medical NLP models (BioBERT/ClinicalBERT)
+# torch>=2.0.0
+# transformers>=4.30.0
+

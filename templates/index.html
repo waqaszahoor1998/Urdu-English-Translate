@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urdu Voice to English Translation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -11,90 +12,223 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-gradient-alt: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --bg-card: #ffffff;
+            --bg-section: #f9fafb;
+            --border: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-gradient);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            line-height: 1.6;
         }
 
         .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            max-width: 600px;
+            background: var(--bg-card);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            padding: 48px;
+            max-width: 800px;
             width: 100%;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--bg-gradient);
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
         }
 
         h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2em;
+            color: var(--text-primary);
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
         }
 
         .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 0.9em;
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            font-weight: 400;
+        }
+
+        .record-section {
+            margin-bottom: 32px;
         }
 
         .record-btn {
             width: 100%;
-            padding: 20px;
-            font-size: 1.2em;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px 32px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            background: var(--bg-gradient);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 16px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-bottom: 30px;
-            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .record-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
 
         .record-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 20px 25px -5px rgba(102, 126, 234, 0.4), 0 10px 10px -5px rgba(102, 126, 234, 0.2);
         }
 
-        .record-btn:active {
-            transform: translateY(0);
+        .record-btn:active::before {
+            width: 300px;
+            height: 300px;
         }
 
         .record-btn.recording {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            animation: pulse 1.5s infinite;
+            background: var(--bg-gradient-alt);
+            animation: pulse-recording 2s ease-in-out infinite;
         }
 
-        @keyframes pulse {
+        @keyframes pulse-recording {
             0%, 100% {
-                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(245, 87, 108, 0.7);
             }
             50% {
-                opacity: 0.7;
+                box-shadow: 0 0 0 10px rgba(245, 87, 108, 0);
             }
+        }
+
+        .record-btn-icon {
+            font-size: 24px;
+            transition: transform 0.3s;
+        }
+
+        .record-btn.recording .record-btn-icon {
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .timer {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--error);
+            margin: 20px 0;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.05em;
         }
 
         .status {
             text-align: center;
+            margin: 24px 0;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            min-height: 24px;
+            font-weight: 500;
+        }
+
+        .status.processing {
+            color: var(--primary);
+        }
+
+        .error {
+            color: var(--error);
+            text-align: center;
             margin: 20px 0;
-            font-size: 1.1em;
-            color: #666;
-            min-height: 30px;
+            padding: 16px 20px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .error.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .result-container {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
+            margin-top: 32px;
             display: none;
+            animation: fadeIn 0.5s ease-in;
         }
 
         .result-container.show {
@@ -102,135 +236,280 @@
         }
 
         .result-section {
+            background: var(--bg-section);
+            border-radius: 16px;
+            padding: 24px;
             margin-bottom: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .result-section:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
         }
 
         .result-section:last-child {
             margin-bottom: 0;
         }
 
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
         .result-label {
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.875rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .result-label-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .result-label-icon.urdu {
+            background: var(--primary);
+            color: white;
+        }
+
+        .result-label-icon.english {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .result-label-icon.prescription {
+            background: var(--success);
+            color: white;
         }
 
         .result-text {
             background: white;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-            font-size: 1.1em;
-            line-height: 1.6;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 1.0625rem;
+            line-height: 1.8;
             direction: rtl;
             text-align: right;
+            color: var(--text-primary);
+            min-height: 80px;
+            transition: border-color 0.3s;
+        }
+
+        .result-text:focus {
+            outline: none;
+            border-color: var(--primary);
         }
 
         .result-text.english {
             direction: ltr;
             text-align: left;
-            border-left-color: #764ba2;
         }
 
-        .error {
-            color: #f5576c;
-            text-align: center;
-            margin-top: 20px;
-            padding: 15px;
-            background: #ffe6e6;
-            border-radius: 8px;
-            display: none;
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
         }
 
-        .error.show {
-            display: block;
+        .action-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: white;
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #f5f7ff;
+            transform: translateY(-1px);
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        .action-btn.success {
+            border-color: var(--success);
+            color: var(--success);
+            background: #f0fdf4;
         }
 
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(99, 102, 241, 0.2);
             border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s linear infinite;
+            border-top-color: var(--primary);
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 10px;
-            background: white;
-            border: 2px solid #667eea;
-            color: #667eea;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9em;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .action-btn:hover {
-            background: #667eea;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .timer {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #f5576c;
-            margin: 10px 0;
-        }
-
         .audio-player {
-            margin-top: 15px;
+            margin-top: 16px;
             width: 100%;
+            border-radius: 12px;
+        }
+
+        .prescription-formatted-text {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            font-family: 'Courier New', 'Monaco', monospace;
+            font-size: 0.9375rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            border: 2px solid var(--success);
+            color: var(--text-primary);
+            min-height: 120px;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 32px 24px;
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .record-btn {
+                padding: 16px 24px;
+                font-size: 1rem;
+            }
+
+            .result-section {
+                padding: 20px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🗣️ Urdu Voice to English</h1>
-        <p class="subtitle">Speak in Urdu and get instant English translation</p>
+        <div class="header">
+            <div class="header-icon">🎤</div>
+            <h1>Urdu Voice to English</h1>
+            <p class="subtitle">Speak naturally and get instant translation</p>
+        </div>
         
-        <button id="recordBtn" class="record-btn">🎤 Click to Record</button>
-        
-        <div class="timer" id="timer" style="display: none;"></div>
-        
-        <div class="status" id="status"></div>
-        
-        <div class="error" id="error"></div>
+        <div class="record-section">
+            <button id="recordBtn" class="record-btn">
+                <span class="record-btn-icon">🎤</span>
+                <span>Click to Record</span>
+            </button>
+            
+            <div class="timer" id="timer" style="display: none;"></div>
+            
+            <div class="status" id="status"></div>
+            
+            <div class="error" id="error"></div>
+        </div>
         
         <div class="result-container" id="resultContainer">
             <div class="result-section">
-                <div class="result-label">Urdu Text (اردو):</div>
+                <div class="result-header">
+                    <div class="result-label">
+                        <span class="result-label-icon urdu">ا</span>
+                        <span>Urdu Text (اردو)</span>
+                    </div>
+                </div>
                 <div class="result-text" id="urduText"></div>
                 <div class="action-buttons">
-                    <button class="action-btn" onclick="copyToClipboard('urduText', this)">📋 Copy Urdu</button>
-                    <button class="action-btn" onclick="downloadText('urduText', 'urdu')">💾 Download</button>
+                    <button class="action-btn" onclick="copyToClipboard('urduText', this)">
+                        <span>📋</span>
+                        <span>Copy</span>
+                    </button>
+                    <button class="action-btn" onclick="downloadText('urduText', 'urdu')">
+                        <span>💾</span>
+                        <span>Download</span>
+                    </button>
                 </div>
             </div>
+            
             <div class="result-section">
-                <div class="result-label">English Translation:</div>
+                <div class="result-header">
+                    <div class="result-label">
+                        <span class="result-label-icon english">EN</span>
+                        <span>English Translation</span>
+                    </div>
+                </div>
                 <div class="result-text english" id="englishText"></div>
                 <div class="action-buttons">
-                    <button class="action-btn" onclick="copyToClipboard('englishText', this)">📋 Copy English</button>
-                    <button class="action-btn" onclick="downloadText('englishText', 'english')">💾 Download</button>
+                    <button class="action-btn" onclick="copyToClipboard('englishText', this)">
+                        <span>📋</span>
+                        <span>Copy</span>
+                    </button>
+                    <button class="action-btn" onclick="downloadText('englishText', 'english')">
+                        <span>💾</span>
+                        <span>Download</span>
+                    </button>
+                    <button class="action-btn" id="formatPrescriptionBtn" onclick="formatAsPrescription()" style="border-color: var(--success); color: var(--success);">
+                        <span>⚕</span>
+                        <span>Format as Prescription</span>
+                    </button>
                 </div>
             </div>
+            
+            <div class="result-section" id="prescriptionSection" style="display: none;">
+                <div class="result-header">
+                    <div class="result-label">
+                        <span class="result-label-icon prescription">⚕</span>
+                        <span>Medical Prescription</span>
+                    </div>
+                </div>
+                <div class="prescription-formatted-text" id="prescriptionContent"></div>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="copyPrescription()">
+                        <span>📋</span>
+                        <span>Copy Prescription</span>
+                    </button>
+                    <button class="action-btn" onclick="downloadPrescription()">
+                        <span>💾</span>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+            
             <audio id="audioPlayer" class="audio-player" controls style="display: none;"></audio>
         </div>
     </div>
@@ -258,7 +537,6 @@
         recordBtn.addEventListener('click', async () => {
             if (!isRecording) {
                 try {
-                    // Request microphone access
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     
                     mediaRecorder = new MediaRecorder(stream, {
@@ -275,22 +553,19 @@
 
                     mediaRecorder.onstop = async () => {
                         recordedAudioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                        
-                        // Stop timer
                         stopTimer();
                         
-                        // Play back the recorded audio
                         const audioPlayer = document.getElementById('audioPlayer');
                         const audioUrl = URL.createObjectURL(recordedAudioBlob);
                         audioPlayer.src = audioUrl;
                         audioPlayer.style.display = 'block';
                         
-                        // Convert blob to base64
                         const reader = new FileReader();
                         reader.onloadend = async () => {
                             const base64audio = reader.result;
                             
                             status.innerHTML = '<div class="loading"></div> Processing audio...';
+                            status.classList.add('processing');
                             
                             try {
                                 const response = await fetch('/process-audio', {
@@ -305,15 +580,27 @@
 
                                 if (data.success) {
                                     hideError();
-                                    urduText.textContent = data.urdu_text;
-                                    englishText.textContent = data.english_text;
+                                    status.classList.remove('processing');
+                                    
+                                    // Display text: original_text always goes to Urdu box, english_text to English box
+                                    // This handles mixed language correctly (Urdu words in Urdu script appear in Urdu box)
+                                    urduText.textContent = data.original_text || '';
+                                    englishText.textContent = data.english_text || '';
+                                    
+                                    // Hide prescription section initially (user will click button to format)
+                                    const prescriptionSection = document.getElementById('prescriptionSection');
+                                    prescriptionSection.style.display = 'none';
+                                    
                                     resultContainer.classList.add('show');
-                                    status.textContent = `Translation completed! (Duration: ${data.duration || 'N/A'}s)`;
+                                    const langInfo = data.detected_language === 'en' ? ' (English detected, no translation needed)' : '';
+                                    status.textContent = `Translation completed! (Duration: ${data.duration || 'N/A'}s)${langInfo}`;
                                 } else {
+                                    status.classList.remove('processing');
                                     showError(data.error || 'Failed to process audio');
                                     status.textContent = '';
                                 }
                             } catch (err) {
+                                status.classList.remove('processing');
                                 showError('Error communicating with server: ' + err.message);
                                 status.textContent = '';
                             }
@@ -321,14 +608,13 @@
                         reader.readAsDataURL(recordedAudioBlob);
                     };
 
-                    // Start recording
                     mediaRecorder.start();
                     isRecording = true;
                     recordingStartTime = Date.now();
                     startTimer();
-                    recordBtn.textContent = '⏹️ Stop Recording';
+                    recordBtn.innerHTML = '<span class="record-btn-icon">⏹️</span><span>Stop Recording</span>';
                     recordBtn.classList.add('recording');
-                    status.textContent = 'Recording... Speak in Urdu now!';
+                    status.textContent = 'Recording... Speak clearly now!';
                     hideError();
                     resultContainer.classList.remove('show');
                     document.getElementById('audioPlayer').style.display = 'none';
@@ -338,15 +624,15 @@
                     status.textContent = '';
                 }
             } else {
-                // Stop recording
                 if (mediaRecorder && mediaRecorder.state !== 'inactive') {
                     mediaRecorder.stop();
                     mediaRecorder.stream.getTracks().forEach(track => track.stop());
                 }
                 isRecording = false;
-                recordBtn.textContent = '🎤 Click to Record';
+                recordBtn.innerHTML = '<span class="record-btn-icon">🎤</span><span>Click to Record</span>';
                 recordBtn.classList.remove('recording');
-                status.textContent = 'Processing your voice...';
+                status.innerHTML = '<div class="loading"></div> Processing your voice...';
+                status.classList.add('processing');
             }
         });
 
@@ -384,10 +670,12 @@
             const text = document.getElementById(elementId).textContent;
             navigator.clipboard.writeText(text).then(() => {
                 if (button) {
-                    const originalText = button.textContent;
-                    button.textContent = '✅ Copied!';
+                    const originalHTML = button.innerHTML;
+                    button.innerHTML = '<span>✅</span><span>Copied!</span>';
+                    button.classList.add('success');
                     setTimeout(() => {
-                        button.textContent = originalText;
+                        button.innerHTML = originalHTML;
+                        button.classList.remove('success');
                     }, 2000);
                 }
             }).catch(err => {
@@ -407,7 +695,81 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
+
+        function formatAsPrescription() {
+            const englishText = document.getElementById('englishText').textContent;
+            if (!englishText || englishText.trim().length === 0) {
+                showError('Please record and translate text first');
+                return;
+            }
+            
+            const formatBtn = document.getElementById('formatPrescriptionBtn');
+            const originalHTML = formatBtn.innerHTML;
+            formatBtn.innerHTML = '<div class="loading"></div><span>Formatting...</span>';
+            formatBtn.disabled = true;
+            
+            fetch('/format-prescription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ text: englishText })
+            })
+            .then(response => response.json())
+            .then(data => {
+                formatBtn.innerHTML = originalHTML;
+                formatBtn.disabled = false;
+                
+                if (data.success && data.prescription_text) {
+                    const prescriptionSection = document.getElementById('prescriptionSection');
+                    const prescriptionContent = document.getElementById('prescriptionContent');
+                    prescriptionContent.textContent = data.prescription_text;
+                    prescriptionSection.style.display = 'block';
+                    prescriptionSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    showError(data.error || 'Failed to format prescription');
+                }
+            })
+            .catch(err => {
+                formatBtn.innerHTML = originalHTML;
+                formatBtn.disabled = false;
+                showError('Error formatting prescription: ' + err.message);
+            });
+        }
+
+        function copyPrescription() {
+            const prescriptionText = document.getElementById('prescriptionContent').textContent;
+            navigator.clipboard.writeText(prescriptionText).then(() => {
+                const btn = window.event ? window.event.target.closest('.action-btn') : document.activeElement;
+                if (btn) {
+                    const originalHTML = btn.innerHTML;
+                    btn.innerHTML = '<span>✅</span><span>Copied!</span>';
+                    btn.classList.add('success');
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.classList.remove('success');
+                    }, 2000);
+                }
+            }).catch(err => {
+                showError('Failed to copy prescription');
+            });
+        }
+
+        function downloadPrescription() {
+            let prescriptionText = document.getElementById('prescriptionContent').textContent;
+            if (!prescriptionText || prescriptionText.trim().length === 0) {
+                prescriptionText = document.getElementById('prescriptionContent').innerText;
+            }
+            const blob = new Blob([prescriptionText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `prescription_${new Date().getTime()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
     </script>
 </body>
 </html>
-
